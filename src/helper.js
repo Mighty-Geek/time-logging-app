@@ -1,3 +1,5 @@
+import uuid from 'uuid';
+
 export const tellTime = (elapsed, runningSince) => {
     let totalTime = elapsed;
     if (runningSince) {
@@ -24,4 +26,14 @@ function pad(numberString, size) {
     let padded = numberString;
     while (padded.length < size) padded = `0${padded}`;
     return padded;
+}
+
+export const newTimer = (timer) => {
+    return {
+        id: uuid.v4(),
+        title: !timer.title ? 'Title' : timer.title,
+        project: !timer.project ? 'Project' : timer.project,
+        elapsed: 0,
+        runningSince: null,
+    };
 }
