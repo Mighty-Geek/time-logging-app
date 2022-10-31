@@ -2,27 +2,24 @@ import React, { Component } from 'react';
 import EditableTimerList from './EditableTimerList';
 import ToggleableTimerForm from './ToggleableTimerForm';
 import { Header, Segment } from 'semantic-ui-react';
-import uuid from 'uuid';
+import '../client';
 import { newTimer } from '../helper';
 
 export default class TimersDashboard extends Component {
     state = {
-        timers: [
-            {
-                title: 'Practice squat',
-                project: 'Gym Chores',
-                id: uuid.v4(),
-                elapsed: 5456099,
-                runningSince: Date.now(),
-            },
-            {
-                title: 'Bake squash',
-                project: 'Kitchen Chores',
-                id: uuid.v4(),
-                elapsed: 1273998,
-                runningSince: null,
-            },
-        ],
+        timers: [],
+    };
+
+    componentDidMount() {
+        this.loadTimersFromServer();
+        setInterval(this.loadTimersFromServer, 5000);
+    }
+
+    loadTimersFromServer = () => {
+        client.getTimers((serverTimers) => (
+            this.setState({ timers: serverTimers })
+        )
+        );
     };
 
     handleCreateFormSubmit = (timer) => {
@@ -49,7 +46,8 @@ export default class TimersDashboard extends Component {
         const t = newTimer(timer);
         this.setState({
             timers: this.state.timers.concat(t),
-        })
+        });
+        client.createTimer(t);
     };
 
     updateTimer = (attrs) => {
@@ -65,12 +63,14 @@ export default class TimersDashboard extends Component {
                 }
             }),
         });
+        client.updateTimer(attrs);
     };
 
     deleteTimer = (timerId) => {
         this.setState({
             timers: this.state.timers.filter(t => t.id != timerId),
         });
+        client.deleteTimer({ id: timerId });
     };
 
     startTimer = (timerId) => {
@@ -86,6 +86,7 @@ export default class TimersDashboard extends Component {
                 }
             }),
         });
+        client.startTimer({ id: timerId, start: now });
     };
 
     stopTimer = (timerId) => {
@@ -103,6 +104,8 @@ export default class TimersDashboard extends Component {
                 }
             }),
         });
+        client.stopTimer(
+            { id: timerId, stop: now });
     };
 
     render() {

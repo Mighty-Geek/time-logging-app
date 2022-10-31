@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --hot",
-    "build": "webpack --mode production"
+    "start2": "webpack-dev-server --mode development --open --hot",
+    "start": "node server/server.js",
+    "build": "webpack --mode production",
+    "server": "nodemon --watch config --watch server server/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "animejs": "^3.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-cli": "^6.26.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
